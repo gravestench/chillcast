@@ -19,7 +19,7 @@ func (s *Service) bindService() {
 
 		for _, service := range s.runtime.Services() {
 			if handler, ok := service.(OnConnect); ok {
-				go handler.OnTwitchConnect()
+				handler.OnTwitchConnect()
 			}
 		}
 	})
@@ -31,7 +31,7 @@ func (s *Service) bindService() {
 
 		for _, service := range s.runtime.Services() {
 			if handler, ok := service.(OnWhisperMessage); ok {
-				go handler.OnTwitchWhisperMessage(message)
+				handler.OnTwitchWhisperMessage(message)
 			}
 		}
 
@@ -44,7 +44,7 @@ func (s *Service) bindService() {
 
 		for _, service := range s.runtime.Services() {
 			if handler, ok := service.(OnPrivateMessage); ok {
-				go handler.OnTwitchPrivateMessage(message)
+				handler.OnTwitchPrivateMessage(message)
 			}
 		}
 
@@ -57,7 +57,7 @@ func (s *Service) bindService() {
 
 		for _, service := range s.runtime.Services() {
 			if handler, ok := service.(OnClearChatMessage); ok {
-				go handler.OnTwitchClearChatMessage(message)
+				handler.OnTwitchClearChatMessage(message)
 			}
 		}
 
@@ -70,7 +70,7 @@ func (s *Service) bindService() {
 
 		for _, service := range s.runtime.Services() {
 			if handler, ok := service.(OnClearMessage); ok {
-				go handler.OnTwitchClearMessage(message)
+				handler.OnTwitchClearMessage(message)
 			}
 		}
 
@@ -83,7 +83,7 @@ func (s *Service) bindService() {
 
 		for _, service := range s.runtime.Services() {
 			if handler, ok := service.(OnRoomStateMessage); ok {
-				go handler.OnTwitchRoomStateMessage(message)
+				handler.OnTwitchRoomStateMessage(message)
 			}
 		}
 
@@ -96,7 +96,7 @@ func (s *Service) bindService() {
 
 		for _, service := range s.runtime.Services() {
 			if handler, ok := service.(OnUserNoticeMessage); ok {
-				go handler.OnTwitchUserNoticeMessage(message)
+				handler.OnTwitchUserNoticeMessage(message)
 			}
 		}
 
@@ -109,7 +109,7 @@ func (s *Service) bindService() {
 
 		for _, service := range s.runtime.Services() {
 			if handler, ok := service.(OnUserStateMessage); ok {
-				go handler.OnTwitchUserStateMessage(message)
+				handler.OnTwitchUserStateMessage(message)
 			}
 		}
 
@@ -122,7 +122,7 @@ func (s *Service) bindService() {
 
 		for _, service := range s.runtime.Services() {
 			if handler, ok := service.(OnGlobalUserStateMessage); ok {
-				go handler.OnTwitchGlobalUserStateMessage(message)
+				handler.OnTwitchGlobalUserStateMessage(message)
 			}
 		}
 
@@ -135,7 +135,7 @@ func (s *Service) bindService() {
 
 		for _, service := range s.runtime.Services() {
 			if handler, ok := service.(OnNoticeMessage); ok {
-				go handler.OnTwitchNoticeMessage(message)
+				handler.OnTwitchNoticeMessage(message)
 			}
 		}
 
@@ -148,7 +148,7 @@ func (s *Service) bindService() {
 
 		for _, service := range s.runtime.Services() {
 			if handler, ok := service.(OnUserJoinMessage); ok {
-				go handler.OnTwitchUserJoinMessage(message)
+				handler.OnTwitchUserJoinMessage(message)
 			}
 		}
 
@@ -161,7 +161,7 @@ func (s *Service) bindService() {
 
 		for _, service := range s.runtime.Services() {
 			if handler, ok := service.(OnUserPartMessage); ok {
-				go handler.OnTwitchUserPartMessage(message)
+				handler.OnTwitchUserPartMessage(message)
 			}
 		}
 
@@ -174,7 +174,7 @@ func (s *Service) bindService() {
 
 		for _, service := range s.runtime.Services() {
 			if handler, ok := service.(OnReconnectMessage); ok {
-				go handler.OnTwitchReconnectMessage(message)
+				handler.OnTwitchReconnectMessage(message)
 			}
 		}
 
@@ -187,7 +187,7 @@ func (s *Service) bindService() {
 
 		for _, service := range s.runtime.Services() {
 			if handler, ok := service.(OnNamesMessage); ok {
-				go handler.OnTwitchNamesMessage(message)
+				handler.OnTwitchNamesMessage(message)
 			}
 		}
 
@@ -200,7 +200,7 @@ func (s *Service) bindService() {
 
 		for _, service := range s.runtime.Services() {
 			if handler, ok := service.(OnPingMessage); ok {
-				go handler.OnTwitchPingMessage(message)
+				handler.OnTwitchPingMessage(message)
 			}
 		}
 
@@ -213,7 +213,7 @@ func (s *Service) bindService() {
 
 		for _, service := range s.runtime.Services() {
 			if handler, ok := service.(OnPongMessage); ok {
-				go handler.OnTwitchPongMessage(message)
+				handler.OnTwitchPongMessage(message)
 			}
 		}
 
@@ -226,7 +226,7 @@ func (s *Service) bindService() {
 
 		for _, service := range s.runtime.Services() {
 			if handler, ok := service.(OnUnsetMessage); ok {
-				go handler.OnTwitchUnsetMessage(message)
+				handler.OnTwitchUnsetMessage(message)
 			}
 		}
 
@@ -239,7 +239,7 @@ func (s *Service) bindService() {
 
 		for _, service := range s.runtime.Services() {
 			if handler, ok := service.(OnPingSent); ok {
-				go handler.OnTwitchPingSent()
+				handler.OnTwitchPingSent()
 			}
 		}
 	})

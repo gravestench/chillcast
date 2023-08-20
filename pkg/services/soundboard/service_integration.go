@@ -8,11 +8,11 @@ import (
 )
 
 var (
-	_ runtime.Service                                = &Service{}
-	_ runtime.HasLogger                              = &Service{}
-	_ runtime.HasDependencies                        = &Service{}
-	_ config_file_manager.HasDefaultConfig           = &Service{}
-	_ twitch_integration.UsesEntireTwitchIntegration = &Service{}
+	_ runtime.Service                      = &Service{}
+	_ runtime.HasLogger                    = &Service{}
+	_ runtime.HasDependencies              = &Service{}
+	_ config_file_manager.HasDefaultConfig = &Service{}
+	_ twitch_integration.OnPrivateMessage  = &Service{}
 )
 
 type Dependency = ConvertsTextToSpeech

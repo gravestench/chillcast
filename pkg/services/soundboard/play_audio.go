@@ -1,7 +1,6 @@
 package soundboard
 
 import (
-	"fmt"
 	"os"
 	"time"
 
@@ -10,18 +9,18 @@ import (
 	"github.com/faiface/beep/speaker"
 )
 
-func (s *Service) playAudio(filePath string) error {
+func (s *Service) playAudio(filePath string) {
 	s.Logger().Info().Msgf("playing audio file: %v", filePath)
 
 	file, err := os.Open(filePath)
 	if err != nil {
-		return fmt.Errorf("failed to open audio file: %w", err)
+		s.Logger().Error().Msgf("failed to open audio file: %w", err)
 	}
 	defer file.Close()
 
 	streamer, format, err := mp3.Decode(file)
 	if err != nil {
-		return fmt.Errorf("failed to decode audio file: %w", err)
+		s.Logger().Error().Msgf("failed to decode audio file: %w", err)
 	}
 	defer streamer.Close()
 
@@ -33,5 +32,5 @@ func (s *Service) playAudio(filePath string) error {
 	})))
 
 	<-done // wait until the audio finishes playing
-	return nil
+	return
 }

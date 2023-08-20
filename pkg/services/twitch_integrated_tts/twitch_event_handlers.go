@@ -17,6 +17,10 @@ func (s *Service) OnTwitchPrivateMessage(message twitch.PrivateMessage) {
 
 	g := cfg.Group(s.Name())
 
+	if g.GetBool("enable") {
+		return
+	}
+
 	if g.GetBool("remove profanity") && s.pd.IsProfane(message.Message) {
 		return
 	}
@@ -29,15 +33,29 @@ func (s *Service) OnTwitchPrivateMessage(message twitch.PrivateMessage) {
 		s.lastPersonThatSpoke = message.User.Name
 
 		name := strings.ReplaceAll(message.User.Name, "_", "")
-		s.tts.SetVoice(voices.EnglishUK)
-		s.tts.Speak(name + " says: ")
+		s.tts.SetVoice(g.GetString("system voice"))
+
+		if g.GetBool("announce user") {
+			s.tts.Speak(name + " says: ")
+		}
 	}
 
-	s.tts.SetVoice(voices.EnglishAU)
+	s.tts.SetVoice(g.GetString("user voice"))
 	s.tts.Speak(message.Message)
 }
 
 func (s *Service) OnTwitchUserJoinMessage(message twitch.UserJoinMessage) {
+	cfg, err := s.Config()
+	if err != nil {
+		s.Logger().Fatal().Msgf("getting config: %v", err)
+	}
+
+	g := cfg.Group(s.Name())
+
+	if g.GetBool("enable") {
+		return
+	}
+
 	if time.Since(s.StartupTime) < s.OnJoinDelay {
 		return
 	}

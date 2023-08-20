@@ -57,24 +57,7 @@ func (s *Service) DefaultConfig() (cfg config_file_manager.Config) {
 		g := cfg.Group("_help")
 
 		g.Set("twitch event list (these are the possible events you can use to trigger)", strings.Join([]string{
-			"OnConnect",
-			"OnWhisperMessage",
 			"OnPrivateMessage",
-			"OnClearChatMessage",
-			"OnClearMessage",
-			"OnRoomStateMessage",
-			"OnUserNoticeMessage",
-			"OnUserStateMessage",
-			"OnGlobalUserStateMessage",
-			"OnNoticeMessage",
-			"OnUserJoinMessage",
-			"OnUserPartMessage",
-			"OnReconnectMessage",
-			"OnNamesMessage",
-			"OnPingMessage",
-			"OnPongMessage",
-			"OnUnsetMessage",
-			"OnPingSent",
 		}, ","))
 
 	}

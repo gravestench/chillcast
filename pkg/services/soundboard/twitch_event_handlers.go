@@ -32,7 +32,7 @@ type SoundBoardObject struct {
 	}
 }
 
-func (s *Service) getGroupsThatTriggerOnTwicthEvent(twitchEvent string) (triggerGroups []string) {
+func (s *Service) getGroupsThatTriggerOnTwitchEvent(twitchEvent, message string) (triggerGroups []string) {
 	cfg, err := s.Config()
 	if err != nil {
 		s.Logger().Error().Msgf("getting config: %v", err)
@@ -42,15 +42,28 @@ func (s *Service) getGroupsThatTriggerOnTwicthEvent(twitchEvent string) (trigger
 	for _, groupName := range cfg.GroupKeys() {
 		sb := cfg.Group(groupName)
 
-		events := sb.GetString("twitch event")
+		events := sb.GetString(keyTwitchEvent)
 
 		if !sb.GetBool(keyEnable) {
 			continue
 		}
 
-		if strings.Contains(events, twitchEvent) {
+		if !strings.Contains(events, twitchEvent) {
+			continue
+		}
+
+		for _, literal := range sb.GetStrings(keyTriggerLiterals) {
+			if strings.Contains(message, literal) {
+				triggerGroups = append(triggerGroups, groupName)
+				continue
+			}
+		}
+
+		if regexp.MustCompile(sb.GetString(keyTriggerRegex)).MatchString(message) {
 			triggerGroups = append(triggerGroups, groupName)
 		}
+
+		triggerGroups = append(triggerGroups, groupName)
 	}
 
 	return triggerGroups
@@ -59,7 +72,7 @@ func (s *Service) getGroupsThatTriggerOnTwicthEvent(twitchEvent string) (trigger
 func (s *Service) objectFromConfigFile(name string, cfg config_file_manager.Object) (obj SoundBoardObject) {
 	obj.name = name
 	obj.enabled = cfg.GetBool(keyEnable)
-	obj.directory = cfg.GetString(keyAudioDirectory)
+	obj.directory = expandHomeDirectory(cfg.GetString(keyAudioDirectory))
 
 	obj.files.literals = cfg.GetStrings(keyAudioFilenamesLiterals)
 	obj.files.pattern = *regexp.MustCompile(cfg.GetString(keyAudioFilenamesRegex))
@@ -136,46 +149,8 @@ func (s *Service) shouldTrigger(obj SoundBoardObject, triggerables ...string) bo
 	return shouldTrigger && notSpamming
 }
 
-func (s *Service) OnTwitchConnect() {
-	triggerGroups := s.getGroupsThatTriggerOnTwicthEvent("OnConnect")
-	if len(triggerGroups) < 1 {
-		return
-	}
-
-	randGroup := pickRandom(triggerGroups)
-
-	cfg, err := s.Config()
-	if err != nil {
-		s.Logger().Error().Msgf("getting config: %v", err)
-		return
-	}
-
-	g := cfg.Group(randGroup)
-	obj := s.objectFromConfigFile(randGroup, g)
-	go s.playAudio(s.pickSoundUsingObject(obj))
-}
-
-func (s *Service) OnTwitchWhisperMessage(message twitch.WhisperMessage) {
-	triggerGroups := s.getGroupsThatTriggerOnTwicthEvent("OnWhisperMessage")
-	if len(triggerGroups) < 1 {
-		return
-	}
-
-	randGroup := pickRandom(triggerGroups)
-
-	cfg, err := s.Config()
-	if err != nil {
-		s.Logger().Error().Msgf("getting config: %v", err)
-		return
-	}
-
-	g := cfg.Group(randGroup)
-	obj := s.objectFromConfigFile(randGroup, g)
-	s.pickSoundUsingObject(obj)
-}
-
 func (s *Service) OnTwitchPrivateMessage(message twitch.PrivateMessage) {
-	triggerGroups := s.getGroupsThatTriggerOnTwicthEvent("OnPrivateMessage")
+	triggerGroups := s.getGroupsThatTriggerOnTwitchEvent("OnPrivateMessage", message.Message)
 	if len(triggerGroups) < 1 {
 		return
 	}
@@ -195,291 +170,6 @@ func (s *Service) OnTwitchPrivateMessage(message twitch.PrivateMessage) {
 	if s.shouldTrigger(obj, message.Message) {
 		go s.playAudio(s.pickSoundUsingObject(obj))
 	}
-}
-
-func (s *Service) OnTwitchClearChatMessage(message twitch.ClearChatMessage) {
-	triggerGroups := s.getGroupsThatTriggerOnTwicthEvent("OnClearChatMessage")
-	if len(triggerGroups) < 1 {
-		return
-	}
-
-	randGroup := pickRandom(triggerGroups)
-
-	cfg, err := s.Config()
-	if err != nil {
-		s.Logger().Error().Msgf("getting config: %v", err)
-		return
-	}
-
-	g := cfg.Group(randGroup)
-	obj := s.objectFromConfigFile(randGroup, g)
-	s.pickSoundUsingObject(obj)
-}
-
-func (s *Service) OnTwitchClearMessage(message twitch.ClearMessage) {
-	triggerGroups := s.getGroupsThatTriggerOnTwicthEvent("OnClearMessage")
-	if len(triggerGroups) < 1 {
-		return
-	}
-
-	randGroup := pickRandom(triggerGroups)
-
-	cfg, err := s.Config()
-	if err != nil {
-		s.Logger().Error().Msgf("getting config: %v", err)
-		return
-	}
-
-	g := cfg.Group(randGroup)
-	obj := s.objectFromConfigFile(randGroup, g)
-	s.pickSoundUsingObject(obj)
-}
-
-func (s *Service) OnTwitchRoomStateMessage(message twitch.RoomStateMessage) {
-	triggerGroups := s.getGroupsThatTriggerOnTwicthEvent("OnRoomStateMessage")
-	if len(triggerGroups) < 1 {
-		return
-	}
-
-	randGroup := pickRandom(triggerGroups)
-
-	cfg, err := s.Config()
-	if err != nil {
-		s.Logger().Error().Msgf("getting config: %v", err)
-		return
-	}
-
-	g := cfg.Group(randGroup)
-	obj := s.objectFromConfigFile(randGroup, g)
-	s.pickSoundUsingObject(obj)
-}
-
-func (s *Service) OnTwitchUserNoticeMessage(message twitch.UserNoticeMessage) {
-	triggerGroups := s.getGroupsThatTriggerOnTwicthEvent("OnUserNoticeMessage")
-	if len(triggerGroups) < 1 {
-		return
-	}
-
-	randGroup := pickRandom(triggerGroups)
-
-	cfg, err := s.Config()
-	if err != nil {
-		s.Logger().Error().Msgf("getting config: %v", err)
-		return
-	}
-
-	g := cfg.Group(randGroup)
-	obj := s.objectFromConfigFile(randGroup, g)
-	go s.playAudio(s.pickSoundUsingObject(obj))
-}
-
-func (s *Service) OnTwitchUserStateMessage(message twitch.UserStateMessage) {
-	triggerGroups := s.getGroupsThatTriggerOnTwicthEvent("OnUserStateMessage")
-	if len(triggerGroups) < 1 {
-		return
-	}
-
-	randGroup := pickRandom(triggerGroups)
-
-	cfg, err := s.Config()
-	if err != nil {
-		s.Logger().Error().Msgf("getting config: %v", err)
-		return
-	}
-
-	g := cfg.Group(randGroup)
-	obj := s.objectFromConfigFile(randGroup, g)
-	s.pickSoundUsingObject(obj)
-}
-
-func (s *Service) OnTwitchGlobalUserStateMessage(message twitch.GlobalUserStateMessage) {
-	triggerGroups := s.getGroupsThatTriggerOnTwicthEvent("OnGlobalUserStateMessage")
-	if len(triggerGroups) < 1 {
-		return
-	}
-
-	randGroup := pickRandom(triggerGroups)
-
-	cfg, err := s.Config()
-	if err != nil {
-		s.Logger().Error().Msgf("getting config: %v", err)
-		return
-	}
-
-	g := cfg.Group(randGroup)
-	obj := s.objectFromConfigFile(randGroup, g)
-	s.pickSoundUsingObject(obj)
-}
-
-func (s *Service) OnTwitchNoticeMessage(message twitch.NoticeMessage) {
-	triggerGroups := s.getGroupsThatTriggerOnTwicthEvent("OnNoticeMessage")
-	if len(triggerGroups) < 1 {
-		return
-	}
-
-	randGroup := pickRandom(triggerGroups)
-
-	cfg, err := s.Config()
-	if err != nil {
-		s.Logger().Error().Msgf("getting config: %v", err)
-		return
-	}
-
-	g := cfg.Group(randGroup)
-	obj := s.objectFromConfigFile(randGroup, g)
-	s.pickSoundUsingObject(obj)
-}
-
-func (s *Service) OnTwitchUserJoinMessage(message twitch.UserJoinMessage) {
-	triggerGroups := s.getGroupsThatTriggerOnTwicthEvent("OnUserJoinMessage")
-	if len(triggerGroups) < 1 {
-		return
-	}
-
-	randGroup := pickRandom(triggerGroups)
-
-	cfg, err := s.Config()
-	if err != nil {
-		s.Logger().Error().Msgf("getting config: %v", err)
-		return
-	}
-
-	g := cfg.Group(randGroup)
-	obj := s.objectFromConfigFile(randGroup, g)
-	s.pickSoundUsingObject(obj)
-}
-
-func (s *Service) OnTwitchUserPartMessage(message twitch.UserPartMessage) {
-	triggerGroups := s.getGroupsThatTriggerOnTwicthEvent("OnUserPartMessage")
-	if len(triggerGroups) < 1 {
-		return
-	}
-
-	randGroup := pickRandom(triggerGroups)
-
-	cfg, err := s.Config()
-	if err != nil {
-		s.Logger().Error().Msgf("getting config: %v", err)
-		return
-	}
-
-	g := cfg.Group(randGroup)
-	obj := s.objectFromConfigFile(randGroup, g)
-	s.pickSoundUsingObject(obj)
-}
-
-func (s *Service) OnTwitchReconnectMessage(message twitch.ReconnectMessage) {
-	triggerGroups := s.getGroupsThatTriggerOnTwicthEvent("OnReconnectMessage")
-	if len(triggerGroups) < 1 {
-		return
-	}
-
-	randGroup := pickRandom(triggerGroups)
-
-	cfg, err := s.Config()
-	if err != nil {
-		s.Logger().Error().Msgf("getting config: %v", err)
-		return
-	}
-
-	g := cfg.Group(randGroup)
-	obj := s.objectFromConfigFile(randGroup, g)
-	s.pickSoundUsingObject(obj)
-}
-
-func (s *Service) OnTwitchNamesMessage(message twitch.NamesMessage) {
-	triggerGroups := s.getGroupsThatTriggerOnTwicthEvent("OnNamesMessage")
-	if len(triggerGroups) < 1 {
-		return
-	}
-
-	randGroup := pickRandom(triggerGroups)
-
-	cfg, err := s.Config()
-	if err != nil {
-		s.Logger().Error().Msgf("getting config: %v", err)
-		return
-	}
-
-	g := cfg.Group(randGroup)
-	obj := s.objectFromConfigFile(randGroup, g)
-	s.pickSoundUsingObject(obj)
-}
-
-func (s *Service) OnTwitchPingMessage(message twitch.PingMessage) {
-	triggerGroups := s.getGroupsThatTriggerOnTwicthEvent("OnPingMessage")
-	if len(triggerGroups) < 1 {
-		return
-	}
-
-	randGroup := pickRandom(triggerGroups)
-
-	cfg, err := s.Config()
-	if err != nil {
-		s.Logger().Error().Msgf("getting config: %v", err)
-		return
-	}
-
-	g := cfg.Group(randGroup)
-	obj := s.objectFromConfigFile(randGroup, g)
-	s.pickSoundUsingObject(obj)
-}
-
-func (s *Service) OnTwitchPongMessage(message twitch.PongMessage) {
-	triggerGroups := s.getGroupsThatTriggerOnTwicthEvent("OnPongMessage")
-	if len(triggerGroups) < 1 {
-		return
-	}
-
-	randGroup := pickRandom(triggerGroups)
-
-	cfg, err := s.Config()
-	if err != nil {
-		s.Logger().Error().Msgf("getting config: %v", err)
-		return
-	}
-
-	g := cfg.Group(randGroup)
-	obj := s.objectFromConfigFile(randGroup, g)
-	s.pickSoundUsingObject(obj)
-}
-
-func (s *Service) OnTwitchUnsetMessage(message twitch.RawMessage) {
-	triggerGroups := s.getGroupsThatTriggerOnTwicthEvent("OnUnsetMessage")
-	if len(triggerGroups) < 1 {
-		return
-	}
-
-	randGroup := pickRandom(triggerGroups)
-
-	cfg, err := s.Config()
-	if err != nil {
-		s.Logger().Error().Msgf("getting config: %v", err)
-		return
-	}
-
-	g := cfg.Group(randGroup)
-	obj := s.objectFromConfigFile(randGroup, g)
-	s.pickSoundUsingObject(obj)
-}
-
-func (s *Service) OnTwitchPingSent() {
-	triggerGroups := s.getGroupsThatTriggerOnTwicthEvent("OnPingSent")
-	if len(triggerGroups) < 1 {
-		return
-	}
-
-	randGroup := pickRandom(triggerGroups)
-
-	cfg, err := s.Config()
-	if err != nil {
-		s.Logger().Error().Msgf("getting config: %v", err)
-		return
-	}
-
-	g := cfg.Group(randGroup)
-	obj := s.objectFromConfigFile(randGroup, g)
-	s.pickSoundUsingObject(obj)
 }
 
 func pickRandom(choices []string) string {
@@ -543,4 +233,14 @@ func (s *Service) removeDuplicates(strings []string) []string {
 	}
 
 	return result
+}
+
+func expandHomeDirectory(path string) string {
+	if strings.HasPrefix(path, "~") {
+		homeDir, err := os.UserHomeDir()
+		if err == nil {
+			path = strings.Replace(path, "~", homeDir, 1)
+		}
+	}
+	return path
 }
