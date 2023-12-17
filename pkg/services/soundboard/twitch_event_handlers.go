@@ -35,7 +35,7 @@ type SoundBoardObject struct {
 func (s *Service) getGroupsThatTriggerOnTwitchEvent(twitchEvent, message string) (triggerGroups []string) {
 	cfg, err := s.Config()
 	if err != nil {
-		s.Logger().Error().Msgf("getting config: %v", err)
+		s.Logger().Error("getting config", "error", err)
 		return nil
 	}
 
@@ -91,12 +91,12 @@ func (s *Service) pickSoundUsingObject(obj SoundBoardObject) (path string) {
 
 	fromLiterals, err := s.getExistingAbsoluteFilePaths(obj.directory, obj.files.literals)
 	if err != nil {
-		s.Logger().Error().Msgf("getting existing files from literals: %v", err)
+		s.Logger().Error("getting existing files from literals", "error", err)
 	}
 
 	fromRegex, err := s.getExistingAbsoluteFilePathsByRegex(obj.directory, obj.files.pattern)
 	if err != nil {
-		s.Logger().Error().Msgf("getting existing files from literals: %v", err)
+		s.Logger().Error("getting existing files from literals", "error", err)
 	}
 
 	existingSoundFilePaths = append(existingSoundFilePaths, fromLiterals...)
@@ -139,7 +139,7 @@ func (s *Service) shouldTrigger(obj SoundBoardObject, triggerables ...string) bo
 	// then decrement it
 	s.antispam[obj.name] += 1
 	go func(antispam map[string]int, name string, interval time.Duration) {
-		s.Logger().Debug().Msgf("Antispam for %s: %d", name, antispam[name])
+		s.Logger().Debug("antispam", "for", name, "count", antispam[name])
 		time.Sleep(interval)
 		antispam[name] -= 1
 	}(s.antispam, obj.name, obj.antispam.interval)
@@ -159,7 +159,7 @@ func (s *Service) OnTwitchPrivateMessage(message twitch.PrivateMessage) {
 
 	cfg, err := s.Config()
 	if err != nil {
-		s.Logger().Error().Msgf("getting config: %v", err)
+		s.Logger().Error("getting config", "error", err)
 		return
 	}
 

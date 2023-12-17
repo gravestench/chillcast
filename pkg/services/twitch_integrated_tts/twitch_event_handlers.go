@@ -12,7 +12,8 @@ import (
 func (s *Service) OnTwitchPrivateMessage(message twitch.PrivateMessage) {
 	cfg, err := s.Config()
 	if err != nil {
-		s.Logger().Fatal().Msgf("getting config: %v", err)
+		s.Logger().Error("getting config", "error", err)
+		panic(err)
 	}
 
 	g := cfg.Group(s.Name())
@@ -47,7 +48,8 @@ func (s *Service) OnTwitchPrivateMessage(message twitch.PrivateMessage) {
 func (s *Service) OnTwitchUserJoinMessage(message twitch.UserJoinMessage) {
 	cfg, err := s.Config()
 	if err != nil {
-		s.Logger().Fatal().Msgf("getting config: %v", err)
+		s.Logger().Error("getting config", "error", err)
+		panic(err)
 	}
 
 	g := cfg.Group(s.Name())

@@ -1,14 +1,14 @@
 package config_file_manager
 
 import (
-	"github.com/gravestench/runtime"
+	"github.com/gravestench/servicemesh"
 )
 
 // Ensure that Service implements the required interfaces.
 var (
-	_ runtime.Service   = &Service{}
-	_ runtime.HasLogger = &Service{}
-	_ Manager           = &Service{}
+	_ servicemesh.Service   = &Service{}
+	_ servicemesh.HasLogger = &Service{}
+	_ Manager               = &Service{}
 )
 
 // The following interfaces are to be used much like the service interfaces

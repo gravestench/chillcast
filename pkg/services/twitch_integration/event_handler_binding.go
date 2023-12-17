@@ -7,7 +7,8 @@ import (
 func (s *Service) bindService() {
 	cfg, err := s.Config()
 	if err != nil {
-		s.Logger().Fatal().Msgf("getting config: %v", err)
+		s.Logger().Error("getting config", "error", err)
+		panic(err)
 	}
 
 	cfgGroup := cfg.Group("handlers")
@@ -17,7 +18,7 @@ func (s *Service) bindService() {
 			return
 		}
 
-		for _, service := range s.runtime.Services() {
+		for _, service := range s.mesh.Services() {
 			if handler, ok := service.(OnConnect); ok {
 				handler.OnTwitchConnect()
 			}
@@ -29,7 +30,7 @@ func (s *Service) bindService() {
 			return
 		}
 
-		for _, service := range s.runtime.Services() {
+		for _, service := range s.mesh.Services() {
 			if handler, ok := service.(OnWhisperMessage); ok {
 				handler.OnTwitchWhisperMessage(message)
 			}
@@ -42,7 +43,7 @@ func (s *Service) bindService() {
 			return
 		}
 
-		for _, service := range s.runtime.Services() {
+		for _, service := range s.mesh.Services() {
 			if handler, ok := service.(OnPrivateMessage); ok {
 				handler.OnTwitchPrivateMessage(message)
 			}
@@ -55,7 +56,7 @@ func (s *Service) bindService() {
 			return
 		}
 
-		for _, service := range s.runtime.Services() {
+		for _, service := range s.mesh.Services() {
 			if handler, ok := service.(OnClearChatMessage); ok {
 				handler.OnTwitchClearChatMessage(message)
 			}
@@ -68,7 +69,7 @@ func (s *Service) bindService() {
 			return
 		}
 
-		for _, service := range s.runtime.Services() {
+		for _, service := range s.mesh.Services() {
 			if handler, ok := service.(OnClearMessage); ok {
 				handler.OnTwitchClearMessage(message)
 			}
@@ -81,7 +82,7 @@ func (s *Service) bindService() {
 			return
 		}
 
-		for _, service := range s.runtime.Services() {
+		for _, service := range s.mesh.Services() {
 			if handler, ok := service.(OnRoomStateMessage); ok {
 				handler.OnTwitchRoomStateMessage(message)
 			}
@@ -94,7 +95,7 @@ func (s *Service) bindService() {
 			return
 		}
 
-		for _, service := range s.runtime.Services() {
+		for _, service := range s.mesh.Services() {
 			if handler, ok := service.(OnUserNoticeMessage); ok {
 				handler.OnTwitchUserNoticeMessage(message)
 			}
@@ -107,7 +108,7 @@ func (s *Service) bindService() {
 			return
 		}
 
-		for _, service := range s.runtime.Services() {
+		for _, service := range s.mesh.Services() {
 			if handler, ok := service.(OnUserStateMessage); ok {
 				handler.OnTwitchUserStateMessage(message)
 			}
@@ -120,7 +121,7 @@ func (s *Service) bindService() {
 			return
 		}
 
-		for _, service := range s.runtime.Services() {
+		for _, service := range s.mesh.Services() {
 			if handler, ok := service.(OnGlobalUserStateMessage); ok {
 				handler.OnTwitchGlobalUserStateMessage(message)
 			}
@@ -133,7 +134,7 @@ func (s *Service) bindService() {
 			return
 		}
 
-		for _, service := range s.runtime.Services() {
+		for _, service := range s.mesh.Services() {
 			if handler, ok := service.(OnNoticeMessage); ok {
 				handler.OnTwitchNoticeMessage(message)
 			}
@@ -146,7 +147,7 @@ func (s *Service) bindService() {
 			return
 		}
 
-		for _, service := range s.runtime.Services() {
+		for _, service := range s.mesh.Services() {
 			if handler, ok := service.(OnUserJoinMessage); ok {
 				handler.OnTwitchUserJoinMessage(message)
 			}
@@ -159,7 +160,7 @@ func (s *Service) bindService() {
 			return
 		}
 
-		for _, service := range s.runtime.Services() {
+		for _, service := range s.mesh.Services() {
 			if handler, ok := service.(OnUserPartMessage); ok {
 				handler.OnTwitchUserPartMessage(message)
 			}
@@ -172,7 +173,7 @@ func (s *Service) bindService() {
 			return
 		}
 
-		for _, service := range s.runtime.Services() {
+		for _, service := range s.mesh.Services() {
 			if handler, ok := service.(OnReconnectMessage); ok {
 				handler.OnTwitchReconnectMessage(message)
 			}
@@ -185,7 +186,7 @@ func (s *Service) bindService() {
 			return
 		}
 
-		for _, service := range s.runtime.Services() {
+		for _, service := range s.mesh.Services() {
 			if handler, ok := service.(OnNamesMessage); ok {
 				handler.OnTwitchNamesMessage(message)
 			}
@@ -198,7 +199,7 @@ func (s *Service) bindService() {
 			return
 		}
 
-		for _, service := range s.runtime.Services() {
+		for _, service := range s.mesh.Services() {
 			if handler, ok := service.(OnPingMessage); ok {
 				handler.OnTwitchPingMessage(message)
 			}
@@ -211,7 +212,7 @@ func (s *Service) bindService() {
 			return
 		}
 
-		for _, service := range s.runtime.Services() {
+		for _, service := range s.mesh.Services() {
 			if handler, ok := service.(OnPongMessage); ok {
 				handler.OnTwitchPongMessage(message)
 			}
@@ -224,7 +225,7 @@ func (s *Service) bindService() {
 			return
 		}
 
-		for _, service := range s.runtime.Services() {
+		for _, service := range s.mesh.Services() {
 			if handler, ok := service.(OnUnsetMessage); ok {
 				handler.OnTwitchUnsetMessage(message)
 			}
@@ -237,7 +238,7 @@ func (s *Service) bindService() {
 			return
 		}
 
-		for _, service := range s.runtime.Services() {
+		for _, service := range s.mesh.Services() {
 			if handler, ok := service.(OnPingSent); ok {
 				handler.OnTwitchPingSent()
 			}

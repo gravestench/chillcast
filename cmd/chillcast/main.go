@@ -3,7 +3,7 @@ package main
 import (
 	"time"
 
-	"github.com/gravestench/runtime"
+	"github.com/gravestench/servicemesh"
 
 	"github.com/gravestench/chillcast/pkg/services/config_file_manager"
 	"github.com/gravestench/chillcast/pkg/services/profanity_detection"
@@ -14,19 +14,19 @@ import (
 )
 
 func main() {
-	rt := runtime.New()
+	app := servicemesh.New("Chillcast")
 
-	rt.Add(&config_file_manager.Service{RootDirectory: "~/.config/chillcast"})
-	rt.Add(&twitch_integration.Service{})
-	rt.Add(&text_to_speech.Service{})
-	rt.Add(&profanity_detection.Service{})
-	rt.Add(&soundboard.Service{})
+	app.Add(&config_file_manager.Service{RootDirectory: "~/.config/chillcast"})
+	app.Add(&twitch_integration.Service{})
+	app.Add(&text_to_speech.Service{})
+	app.Add(&profanity_detection.Service{})
+	app.Add(&soundboard.Service{})
 
 	// this connects the twitch integration to the TTS
-	rt.Add(&twitch_integrated_tts.Service{
+	app.Add(&twitch_integrated_tts.Service{
 		StartupTime: time.Now(),
 		OnJoinDelay: time.Second * 60,
 	})
 
-	rt.Run()
+	app.Run()
 }

@@ -1,12 +1,11 @@
 package config_file_manager
 
 import (
+	"log/slog"
 	"sync"
 
-	"github.com/rs/zerolog"
-
-	"github.com/gravestench/runtime"
 	"github.com/gravestench/runtime/pkg/events"
+	"github.com/gravestench/servicemesh"
 )
 
 const (
@@ -16,20 +15,20 @@ const (
 
 // Service is a config file manager that marshals to and from json files.
 type Service struct {
-	log                        *zerolog.Logger
+	log                        *slog.Logger
 	mux                        sync.Mutex
 	configs                    map[string]*Config
 	servicesWithDefaultConfigs map[string]HasDefaultConfig
 	RootDirectory              string
 }
 
-// BindLogger satisfies the runtime.HasLogger interface
-func (s *Service) BindLogger(l *zerolog.Logger) {
+// SetLogger satisfies the servicemesh.HasLogger interface
+func (s *Service) SetLogger(l *slog.Logger) {
 	s.log = l
 }
 
-// Logger satisfies the runtime.HasLogger interface
-func (s *Service) Logger() *zerolog.Logger {
+// Logger satisfies the servicemesh.HasLogger interface
+func (s *Service) Logger() *slog.Logger {
 	return s.log
 }
 
@@ -39,26 +38,26 @@ func (s *Service) Name() string {
 }
 
 // Init satisfies the runtime.IsRuntimeService interface
-func (s *Service) Init(rt runtime.Runtime) {
+func (s *Service) Init(mesh servicemesh.Mesh) {
 	s.configs = make(map[string]*Config)
 	s.servicesWithDefaultConfigs = make(map[string]HasDefaultConfig)
 
-	for _, candidate := range rt.Services() {
+	for _, candidate := range mesh.Services() {
 		err := s.applyDefaultConfig(candidate)
 		if err != nil {
-			s.log.Error().Msgf("applying default config for %q: %v", candidate.Name(), err)
+			s.log.Error("applying default config", "for", candidate.Name(), "error", err)
 		}
 	}
 
-	rt.Events().On(events.EventServiceAdded, func(args ...any) {
+	mesh.Events().On(events.EventServiceAdded, func(args ...any) {
 		if len(args) < 1 {
 			return
 		}
 
-		if candidate, ok := args[0].(runtime.Service); ok {
+		if candidate, ok := args[0].(servicemesh.Service); ok {
 			err := s.applyDefaultConfig(candidate)
 			if err != nil {
-				s.log.Error().Msgf("applying default config for %q: %v", candidate.Name(), err)
+				s.log.Error("applying default config", "for", candidate.Name(), "error", err)
 			}
 		}
 	})

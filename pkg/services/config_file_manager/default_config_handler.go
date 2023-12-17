@@ -3,10 +3,10 @@ package config_file_manager
 import (
 	"fmt"
 
-	"github.com/gravestench/runtime"
+	"github.com/gravestench/servicemesh"
 )
 
-func (s *Service) applyDefaultConfig(candidate runtime.S) error {
+func (s *Service) applyDefaultConfig(candidate servicemesh.Service) error {
 	// check if the service does not have defaults
 	target, ok := candidate.(HasDefaultConfig)
 	if !ok {
@@ -41,7 +41,7 @@ func (s *Service) applyDefaultConfig(candidate runtime.S) error {
 		}
 	}
 
-	s.log.Info().Msgf("config file for %q service can be found at: %v", name, s.GetPath(target.ConfigFileName()))
+	s.log.Info("default config file loaded", "for", name, "path", s.GetPath(target.ConfigFileName()))
 
 	return s.SaveConfig(cfgPath)
 }

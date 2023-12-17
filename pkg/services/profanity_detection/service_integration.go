@@ -1,15 +1,15 @@
 package profanity_detection
 
 import (
-	"github.com/gravestench/runtime"
+	"github.com/gravestench/servicemesh"
 
 	"github.com/gravestench/chillcast/pkg/services/config_file_manager"
 )
 
 var (
-	_ runtime.Service                      = &Service{}
-	_ runtime.HasLogger                    = &Service{}
-	_ runtime.HasDependencies              = &Service{}
+	_ servicemesh.Service                  = &Service{}
+	_ servicemesh.HasLogger                = &Service{}
+	_ servicemesh.HasDependencies          = &Service{}
 	_ config_file_manager.HasDefaultConfig = &Service{}
 	_ DetectsProfanity                     = &Service{}
 )

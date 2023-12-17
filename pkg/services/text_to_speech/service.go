@@ -1,26 +1,25 @@
 package text_to_speech
 
 import (
+	"log/slog"
 	"os"
 	"strings"
 	"time"
 
+	"github.com/gravestench/servicemesh"
 	htgotts "github.com/hegedustibor/htgo-tts"
 	"github.com/hegedustibor/htgo-tts/handlers"
-	"github.com/rs/zerolog"
-
-	"github.com/gravestench/runtime/pkg"
 
 	config_file_manager2 "github.com/gravestench/chillcast/pkg/services/config_file_manager"
 )
 
 type Service struct {
-	logger     *zerolog.Logger
+	logger     *slog.Logger
 	cfgManager config_file_manager2.Manager
 	speech     htgotts.Speech
 }
 
-func (s *Service) Init(rt pkg.IsRuntime) {
+func (s *Service) Init(mesh servicemesh.Mesh) {
 	var cfg *config_file_manager2.Config
 
 	for { // wait until the config or default config is saved + loaded
@@ -51,11 +50,11 @@ func (s *Service) Name() string {
 	return "Text-to-speech"
 }
 
-func (s *Service) BindLogger(logger *zerolog.Logger) {
+func (s *Service) SetLogger(logger *slog.Logger) {
 	s.logger = logger
 }
 
-func (s *Service) Logger() *zerolog.Logger {
+func (s *Service) Logger() *slog.Logger {
 	return s.logger
 }
 

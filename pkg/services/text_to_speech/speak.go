@@ -8,10 +8,10 @@ import (
 )
 
 func (s *Service) Speak(text string) {
-	s.logger.Info().Str("voice", s.speech.Language).Msg(text)
+	s.logger.Info("speaking", "text", text, "voice", s.speech.Language)
 
 	if err := s.speech.Speak(text); err != nil {
-		s.logger.Error().Msgf("could not convert text to speech: %v", err)
+		s.logger.Error("could not convert text to speech", "error", err)
 	}
 }
 

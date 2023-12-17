@@ -1,26 +1,27 @@
 package profanity_detection
 
 import (
-	"github.com/gravestench/runtime/pkg"
-	"github.com/rs/zerolog"
+	"log/slog"
 
 	"github.com/TwiN/go-away"
+	"github.com/gravestench/servicemesh"
 
 	"github.com/gravestench/chillcast/pkg/services/config_file_manager"
 )
 
 type Service struct {
-	logger *zerolog.Logger
+	logger *slog.Logger
 
 	cfgManager config_file_manager.Dependency
 
 	pd *goaway.ProfanityDetector
 }
 
-func (s *Service) Init(rt pkg.IsRuntime) {
+func (s *Service) Init(mesh servicemesh.Mesh) {
 	cfg, err := s.Config()
 	if err != nil {
-		s.Logger().Fatal().Msgf("getting config: %v", err)
+		s.Logger().Error("getting config", "error", err)
+		panic(err)
 	}
 
 	g := cfg.Group(s.Name())
@@ -40,11 +41,11 @@ func (s *Service) Name() string {
 	return "Profanity Detector"
 }
 
-func (s *Service) BindLogger(logger *zerolog.Logger) {
+func (s *Service) SetLogger(logger *slog.Logger) {
 	s.logger = logger
 }
 
-func (s *Service) Logger() *zerolog.Logger {
+func (s *Service) Logger() *slog.Logger {
 	return s.logger
 }
 

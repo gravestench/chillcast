@@ -205,5 +205,5 @@ contact the maintainers directly.
 
 * [x] text to speech
 * [x] profanity check 
-* [ ] soundboard
+* [X] soundboard
 * [ ] automated soundboard downloads

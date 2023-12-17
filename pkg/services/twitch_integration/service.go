@@ -1,24 +1,24 @@
 package twitch_integration
 
 import (
-	"github.com/rs/zerolog"
+	"log/slog"
 
 	"github.com/gempir/go-twitch-irc/v2"
-	"github.com/gravestench/runtime"
+	"github.com/gravestench/servicemesh"
 
 	"github.com/gravestench/chillcast/pkg/services/config_file_manager"
 )
 
 type Service struct {
-	runtime    runtime.R
-	logger     *zerolog.Logger
+	mesh       servicemesh.Mesh
+	logger     *slog.Logger
 	cfgManager config_file_manager.Manager
 
 	twitchIrcClient *twitch.Client
 }
 
-func (s *Service) Init(rt runtime.R) {
-	s.runtime = rt
+func (s *Service) Init(mesh servicemesh.Mesh) {
+	s.mesh = mesh
 	s.setupClient()
 	s.bindService()
 }
@@ -27,10 +27,10 @@ func (s *Service) Name() string {
 	return "Twitch Integration"
 }
 
-func (s *Service) BindLogger(logger *zerolog.Logger) {
+func (s *Service) SetLogger(logger *slog.Logger) {
 	s.logger = logger
 }
 
-func (s *Service) Logger() *zerolog.Logger {
+func (s *Service) Logger() *slog.Logger {
 	return s.logger
 }

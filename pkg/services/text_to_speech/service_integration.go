@@ -1,12 +1,12 @@
 package text_to_speech
 
 import (
-	"github.com/gravestench/runtime"
+	"github.com/gravestench/servicemesh"
 )
 
 var (
-	_ runtime.Service   = &Service{}
-	_ runtime.HasLogger = &Service{}
+	_ servicemesh.Service   = &Service{}
+	_ servicemesh.HasLogger = &Service{}
 )
 
 type Dependency = ConvertsTextToSpeech

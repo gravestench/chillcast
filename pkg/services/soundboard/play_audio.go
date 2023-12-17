@@ -10,17 +10,17 @@ import (
 )
 
 func (s *Service) playAudio(filePath string) {
-	s.Logger().Info().Msgf("playing audio file: %v", filePath)
+	s.Logger().Info("playing audio file", "path", filePath)
 
 	file, err := os.Open(filePath)
 	if err != nil {
-		s.Logger().Error().Msgf("failed to open audio file: %w", err)
+		s.Logger().Error("opening audio file", "error", err)
 	}
 	defer file.Close()
 
 	streamer, format, err := mp3.Decode(file)
 	if err != nil {
-		s.Logger().Error().Msgf("failed to decode audio file: %w", err)
+		s.Logger().Error("decoding audio file", "error", err)
 	}
 	defer streamer.Close()
 

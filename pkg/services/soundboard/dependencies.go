@@ -1,7 +1,7 @@
 package soundboard
 
 import (
-	"github.com/gravestench/runtime/pkg"
+	"github.com/gravestench/servicemesh"
 
 	"github.com/gravestench/chillcast/pkg/services/config_file_manager"
 )
@@ -18,8 +18,8 @@ func (s *Service) DependenciesResolved() bool {
 	return true
 }
 
-func (s *Service) ResolveDependencies(runtime pkg.IsRuntime) {
-	for _, service := range runtime.Services() {
+func (s *Service) ResolveDependencies(mesh servicemesh.Mesh) {
+	for _, service := range mesh.Services() {
 		if candidate, ok := service.(config_file_manager.Manager); ok {
 			s.cfgManager = candidate
 		}
