@@ -4,7 +4,6 @@ import (
 	"log/slog"
 	"sync"
 
-	"github.com/gravestench/runtime/pkg/events"
 	"github.com/gravestench/servicemesh"
 )
 
@@ -49,7 +48,7 @@ func (s *Service) Init(mesh servicemesh.Mesh) {
 		}
 	}
 
-	mesh.Events().On(events.EventServiceAdded, func(args ...any) {
+	mesh.Events().On(servicemesh.EventServiceAdded, func(args ...any) {
 		if len(args) < 1 {
 			return
 		}
