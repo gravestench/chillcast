@@ -31,12 +31,12 @@ func (s *Service) Logger() *slog.Logger {
 	return s.log
 }
 
-// Name satisfies the runtime.IsRuntimeService interface
+// Name satisfies the servicemesh.Service interface
 func (s *Service) Name() string {
 	return "Config File Manager"
 }
 
-// Init satisfies the runtime.IsRuntimeService interface
+// Init satisfies the servicemesh.Service interface
 func (s *Service) Init(mesh servicemesh.Mesh) {
 	s.configs = make(map[string]*Config)
 	s.servicesWithDefaultConfigs = make(map[string]HasDefaultConfig)

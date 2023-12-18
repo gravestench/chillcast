@@ -11,8 +11,8 @@ var (
 	_ Manager               = &Service{}
 )
 
-// The following interfaces are to be used much like the service interfaces
-// found inside of runtime/pkg. These can be used by other services to
+// The following interfaces are to be used much like the integration interfaces
+// found in the servicemesh module. These can be used by other services to
 // declare and resolve their dependencies to the service defined in this
 // package.
 
