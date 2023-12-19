@@ -36,6 +36,10 @@ func (s *Service) Name() string {
 	return "Config File Manager"
 }
 
+func (s *Service) Ready() bool {
+	return true
+}
+
 // Init satisfies the servicemesh.Service interface
 func (s *Service) Init(mesh servicemesh.Mesh) {
 	s.configs = make(map[string]*Config)

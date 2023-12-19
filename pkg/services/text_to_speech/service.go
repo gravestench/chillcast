@@ -10,17 +10,17 @@ import (
 	htgotts "github.com/hegedustibor/htgo-tts"
 	"github.com/hegedustibor/htgo-tts/handlers"
 
-	config_file_manager2 "github.com/gravestench/chillcast/pkg/services/config_file_manager"
+	"github.com/gravestench/chillcast/pkg/services/config_file_manager"
 )
 
 type Service struct {
 	logger     *slog.Logger
-	cfgManager config_file_manager2.Manager
+	cfgManager config_file_manager.Manager
 	speech     htgotts.Speech
 }
 
 func (s *Service) Init(mesh servicemesh.Mesh) {
-	var cfg *config_file_manager2.Config
+	var cfg *config_file_manager.Config
 
 	for { // wait until the config or default config is saved + loaded
 		time.Sleep(time.Second)
@@ -66,4 +66,8 @@ func expandHomeDirectory(path string) string {
 		}
 	}
 	return path
+}
+
+func (s *Service) Ready() bool {
+	return true
 }

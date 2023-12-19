@@ -10,6 +10,12 @@ import (
 func (s *Service) Speak(text string) {
 	s.logger.Info("speaking", "text", text, "voice", s.speech.Language)
 
+	defer func() {
+		if err := recover(); err != nil {
+			s.logger.Error("couldn't speak", "error", err)
+		}
+	}()
+
 	if err := s.speech.Speak(text); err != nil {
 		s.logger.Error("could not convert text to speech", "error", err)
 	}

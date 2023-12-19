@@ -10,6 +10,7 @@ import (
 )
 
 func (s *Service) OnTwitchPrivateMessage(message twitch.PrivateMessage) {
+	s.logger.Info("handling private chat message", "user", message.User.Name, "message", message.Message)
 	cfg, err := s.Config()
 	if err != nil {
 		s.Logger().Error("getting config", "error", err)
@@ -18,7 +19,7 @@ func (s *Service) OnTwitchPrivateMessage(message twitch.PrivateMessage) {
 
 	g := cfg.Group(s.Name())
 
-	if g.GetBool("enable") {
+	if !g.GetBool("enable") {
 		return
 	}
 

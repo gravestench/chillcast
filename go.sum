@@ -33,6 +33,8 @@ github.com/gravestench/runtime v0.0.0-20231217215734-ea028d2849a4 h1:PGymTLjMqaY
 github.com/gravestench/runtime v0.0.0-20231217215734-ea028d2849a4/go.mod h1:mNoqRXYMwH7opGomjbika1n9Uh7DL8bRiCKnJY4MIIs=
 github.com/gravestench/servicemesh v0.0.0-20231217230903-9a3becd24d76 h1:ZjmYFc0SKSusXw4kQrG+EkkRzu2e6vsx6zjv7xYa+QE=
 github.com/gravestench/servicemesh v0.0.0-20231217230903-9a3becd24d76/go.mod h1:wIMRb3qWNz8jl7jFg4mTfpFq2BSoPfIwPtBHLxrdpUY=
+github.com/gravestench/servicemesh v0.0.0-20231219013204-1da0a4a7b028 h1:ohCLqUUysGd4Y/rxU9C8bJiSg8H7+dl+u/OiAy9K3cY=
+github.com/gravestench/servicemesh v0.0.0-20231219013204-1da0a4a7b028/go.mod h1:wIMRb3qWNz8jl7jFg4mTfpFq2BSoPfIwPtBHLxrdpUY=
 github.com/hajimehoshi/go-mp3 v0.3.0/go.mod h1:qMJj/CSDxx6CGHiZeCgbiq2DSUkbK0UbtXShQcnfyMM=
 github.com/hajimehoshi/go-mp3 v0.3.3 h1:cWnfRdpye2m9ElSoVqneYRcpt/l3ijttgjMeQh+r+FE=
 github.com/hajimehoshi/go-mp3 v0.3.3/go.mod h1:qMJj/CSDxx6CGHiZeCgbiq2DSUkbK0UbtXShQcnfyMM=

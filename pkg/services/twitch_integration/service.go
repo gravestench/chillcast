@@ -34,3 +34,7 @@ func (s *Service) SetLogger(logger *slog.Logger) {
 func (s *Service) Logger() *slog.Logger {
 	return s.logger
 }
+
+func (s *Service) Ready() bool {
+	return true
+}

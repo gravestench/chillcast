@@ -6,7 +6,7 @@ require (
 	github.com/TwiN/go-away v1.6.12
 	github.com/faiface/beep v1.1.0
 	github.com/gempir/go-twitch-irc/v2 v2.8.1
-	github.com/gravestench/servicemesh v0.0.0-20231217230903-9a3becd24d76
+	github.com/gravestench/servicemesh v0.0.0-20231219013204-1da0a4a7b028
 	github.com/hegedustibor/htgo-tts v0.0.0-20230402053941-cd8d1a158135
 	golang.org/x/oauth2 v0.15.0
 	k8s.io/utils v0.0.0-20231127182322-b307cd553661

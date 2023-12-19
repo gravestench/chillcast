@@ -24,7 +24,7 @@ func (s *Service) DefaultConfig() (cfg config_file_manager.Config) {
 
 	cfgDir := s.cfgManager.ConfigDirectory()
 	g.SetDefault("directory", filepath.Join(cfgDir, "audio_files"))
-	g.SetDefault("mplayer-handler", false)
+	g.SetDefault("mplayer-handler", true)
 
 	return
 }

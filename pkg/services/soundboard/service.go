@@ -29,3 +29,7 @@ func (s *Service) Init(mesh servicemesh.Mesh) {
 func (s *Service) Name() string {
 	return "Soundboard"
 }
+
+func (s *Service) Ready() bool {
+	return true
+}
